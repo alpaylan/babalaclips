@@ -6,7 +6,9 @@ import { Button, Modal, Stack, Typography } from "@mui/material";
 import Subtitle, { SubtitleData } from "@/components/Subtitle";
 import YouTubeVideo from "@/components/YoutubeVideo";
 
+//@ts-ignore
 import { Player } from 'youtube-player';
+
 import Cutter from '@/components/Cutter';
 
 const data = require('@/data/subtitles.json');

@@ -1,6 +1,7 @@
 import React, { useState, FC } from 'react';
 
 import YouTube from 'react-youtube';
+//@ts-ignore
 import { Options, Player, PlayerEvent } from 'youtube-player';
 
 const YouTubeVideo: FC<{ onReady: (player: Player) => void }> = ({ onReady }) => {
