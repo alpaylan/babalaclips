@@ -1,51 +1,20 @@
-import React, { useState, useEffect, FC } from 'react';
+import React, { useState, useEffect} from 'react';
 
 import Grid from '@mui/material/Grid';
 import { Stack, Typography } from "@mui/material";
-import Subtitle from "../components/Subtitle";
 
-import YouTube, { Options, Player, PlayerEvent } from 'react-youtube';
+import Subtitle, { SubtitleData } from "@/components/Subtitle";
+import YouTubeVideo from "@/components/YoutubeVideo";
 
-const YouTubeVideo: FC<{ onReady: (player: Player) => void }> = ({ onReady }) => {
-  const [player, setPlayer] = useState<Player | null>(null);
-  const [timestamp, setTimestamp] = React.useState(0);
+import { Player } from 'youtube-player';
 
-  const opts: Options = {
-    height: '390',
-    width: '640',
-    playerVars: {
-      autoplay: 1,
-    },
-  };
-
-  const onReadyHandler = (event: PlayerEvent) => {
-    setPlayer(event.target);
-    onReady(event.target);
-  };
-
-  const onStateChangeHandler = (event: PlayerEvent) => {
-    if (event.data === 0) {
-      setTimestamp(timestamp);
-      player?.seekTo(timestamp);
-    }
-  };
-
-  return (
-    <YouTube
-      videoId="Q8rjsfTxbdI"
-      opts={opts}
-      onReady={onReadyHandler}
-      onStateChange={onStateChangeHandler}
-    />
-  );
-}
-
-
-
+const data = require('@/data/first2hours.json');
 
 export default function Home() {
   const [player, setPlayer] = useState<Player | null>(null);
   const [timestamp, setTimestamp] = React.useState(0);
+
+  console.log("data", data);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -70,7 +39,7 @@ export default function Home() {
         </Stack>
       </Grid>
       <Grid item xs={12} md={6}>
-        <Subtitle setPlayerTime={setPlayerTime} currentTimestamp={timestamp} />
+        <Subtitle setPlayerTime={setPlayerTime} currentTimestamp={timestamp} data={data} />
       </Grid>
     </Grid>
   );

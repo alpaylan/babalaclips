@@ -1,134 +1,48 @@
-import { Box, Modal, Table, TableBody, TableCell, TableHead, TableRow, TextField, Typography } from '@mui/material';
+
 import React from 'react';
 
-type SubtitleData = {
+import SubtitleTable from '@/components/SubtitleTable';
+import { Box, Modal, TextField, Typography } from '@mui/material';
+
+export type SubtitleData = {
     startTime: number;
     endTime: number;
     text: string;
 };
 
-const getCurrentSubtitle = (subtitles: SubtitleData[], currentTimestamp: number) => {
-    // get the subtitle that is currently playing and return its id
-    // if no subtitle is playing, return -1
-    const res = subtitles.findIndex((subtitle) => {
-        if (currentTimestamp >= subtitle.startTime && currentTimestamp <= subtitle.endTime) {
-            console.log("currentTimestamp", currentTimestamp);
-            console.log("subtitle.startTime", subtitle.startTime);
-            console.log("subtitle.endTime", subtitle.endTime);
-            return true;
-        }
-    });
-    console.log("res", res);
-    return res;
-}
-
-const mockSubtitles: SubtitleData[] = [
-    {
-        startTime: 0,
-        endTime: 10,
-        text: "Hello"
-    },
-    {
-        startTime: 10,
-        endTime: 20,
-        text: "World"
-    },
-    {
-        startTime: 20.01,
-        endTime: 30,
-        text: "!"
-    },
-    {
-        startTime: 30,
-        endTime: 40,
-        text: "This"
-    },
-    {
-        startTime: 40,
-        endTime: 50,
-        text: "is"
-    },
-    {
-        startTime: 50,
-        endTime: 60,
-        text: "a"
-    },
-    {
-        startTime: 60,
-        endTime: 70,
-        text: "subtitle"
-    },
-    {
-        startTime: 70,
-        endTime: 80,
-        text: "example"
-    },
-];
-
-type SubtitleTableProps = {
-    subtitles: SubtitleData[],
-    currentTimestamp: number,
-    setPlayerTime: (time: number) => void,
-};
-const SubtitleTable = ({ subtitles, currentTimestamp, setPlayerTime }: SubtitleTableProps) => {
-    const currentSubtitleId = getCurrentSubtitle(subtitles, currentTimestamp);
-    console.log("currentSubtitleId", currentSubtitleId);
-    if (currentSubtitleId === -1) {
-        return <div>Timestamp is out of bounds</div>;
-    }
-    let firstSubtitleInTable = currentSubtitleId - 2;
-    if (firstSubtitleInTable < 0) {
-        firstSubtitleInTable = 0;
-    }
-    let lastSubtitleInTable = currentSubtitleId + 2;
-    if (lastSubtitleInTable > subtitles.length - 1) {
-        lastSubtitleInTable = subtitles.length - 1;
-    }
-
-    console.log("firstSubtitleInTable", firstSubtitleInTable);
-    console.log("lastSubtitleInTable", lastSubtitleInTable);
-    const subtitlesToDisplay = subtitles.slice(firstSubtitleInTable, lastSubtitleInTable + 1);
-    return (
-        <Table>
-            <TableHead>
-                <TableRow>
-                    <TableCell>Start Time</TableCell>
-                    <TableCell>End Time</TableCell>
-                    <TableCell>Text</TableCell>
-                </TableRow>
-            </TableHead>
-            <TableBody>
-                {subtitlesToDisplay.map((subtitle, index) => {
-                    if (index === (currentSubtitleId - firstSubtitleInTable)) {
-                        return (
-                            <TableRow key={index} style={{ backgroundColor: "yellow" }}>
-                                <TableCell>{subtitle.startTime}</TableCell>
-                                <TableCell>{subtitle.endTime}</TableCell>
-                                <TableCell>{subtitle.text}</TableCell>
-                            </TableRow>
-                        );
-                    }
-                    return (
-                        <TableRow key={index} onClick={() => setPlayerTime(subtitle.startTime)}>
-                            <TableCell>{subtitle.startTime}</TableCell>
-                            <TableCell>{subtitle.endTime}</TableCell>
-                            <TableCell>{subtitle.text}</TableCell>
-                        </TableRow>
-                    );
-                })}
-            </TableBody>
-        </Table>
-    );
-}
-
 type SubtitleProps = {
     setPlayerTime: (time: number) => void,
     currentTimestamp: number,
+    data: SubtitleData[],
 };
 
-const Subtitle = ({ setPlayerTime, currentTimestamp }: SubtitleProps) => {
+const timestampFilter = (timestamp: number) => (subtitles: SubtitleData[]) => {
+    let index = subtitles.findIndex((subtitle) => {
+        if (timestamp >= subtitle.startTime && timestamp <= subtitle.endTime) {
+            return true;
+        }
+    });
+
+    if (index === -1) {
+        return [];
+    }
+
+    let firstSubtitleInTable = (index >= 2) ? index - 2 : 0;
+    let lastSubtitleInTable = (index <= subtitles.length - 3) ? index + 2 : subtitles.length - 1;
+
+    return subtitles.slice(firstSubtitleInTable, lastSubtitleInTable + 1);
+}
+
+const searchFilter = (searchInput: string) => (subtitles: SubtitleData[]) => {
+    return subtitles.filter((subtitle) => {
+        return subtitle.text.toLowerCase().includes(searchInput.toLowerCase());
+    });
+}
+
+
+const Subtitle = ({ setPlayerTime, currentTimestamp, data }: SubtitleProps) => {
     const [searchInput, setSearchInput] = React.useState<string>("");
-    const [subtitles, setSubtitles] = React.useState<SubtitleData[]>(mockSubtitles);
+    const [subtitles, setSubtitles] = React.useState<SubtitleData[]>(data);
     return (
         <div>
             <Typography variant="h4" component="h1" gutterBottom>
@@ -143,7 +57,12 @@ const Subtitle = ({ setPlayerTime, currentTimestamp }: SubtitleProps) => {
                     onChange={(e) => setSearchInput(e.target.value)}
                 />
             }
-            <SubtitleTable setPlayerTime={setPlayerTime} subtitles={subtitles} currentTimestamp={currentTimestamp} />
+            <SubtitleTable 
+                setPlayerTime={setPlayerTime} 
+                subtitles={subtitles}
+                currentTimestamp={currentTimestamp}
+                filter={timestampFilter(currentTimestamp)}
+                />
             {
                 searchInput === "" ? null : (
                     <div>
@@ -167,10 +86,14 @@ const Subtitle = ({ setPlayerTime, currentTimestamp }: SubtitleProps) => {
                                     id="outlined-basic"
                                     label="Search"
                                     variant="outlined"
+                                    inputRef={(input) => input && input.focus()}
                                     value={searchInput}
                                     onChange={(e) => setSearchInput(e.target.value)}
                                 />
-                                <SubtitleTable setPlayerTime={setPlayerTime} subtitles={subtitles} currentTimestamp={currentTimestamp} />
+                                <SubtitleTable 
+                                    setPlayerTime={setPlayerTime} 
+                                    subtitles={subtitles} 
+                                    filter={searchFilter(searchInput)} />
                             </Box>
 
                         </Modal>
