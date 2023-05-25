@@ -86,45 +86,49 @@ const rowContent = (startId: number, endId: number) => (_index: number, row: Sub
     );
 }
 
-const CutterTable = ({ interval }: { interval: [number, number] }) => {
+export interface CutterTableProps {
+    interval: [number, number];
+}
+
+
+const CutterTable: React.FC<CutterTableProps> = ({ interval }) => {
     const virtuoso = useRef<TableVirtuosoHandle>(null);
 
-    const handleSave = () => {
+    async function handleSave() {
         const data = {
             start: interval[0],
             end: interval[1]
         };
-
-        fetch('https://babalaclips.fly.dev/cut', {
+    
+        const endpointResponse = await fetch('https://babalaclips.fly.dev/cut', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify(data),
             mode: 'cors'
-        })
-            .then(response => response.text())
-            .then(url => {
-                fetch(url, {
-                    method: 'GET',
-                    mode: 'cors'
-                })
-                    .then(response => response.blob())
-                    .then(blob => {
-                        console.log(blob);
-                        const urlObject = URL.createObjectURL(blob);
-                        const link = document.createElement('a');
-                        link.href = urlObject;
-                        link.download = "babalaclip.mp4";
-                        document.body.appendChild(link);
-                        link.click();
-                        document.body.removeChild(link);
-                    })
-                    .catch((error) => {
-                        console.error('Error:', error);
-                    });
-            }
-            );
+        });
+    
+        const cutResponse = await fetch(await endpointResponse.text(), {
+            method: 'GET',
+            mode: 'cors'
+        });
+        const cutBlob = await cutResponse.blob();
+        
+        try {
+            console.log(cutBlob);
+            const urlObject = URL.createObjectURL(cutBlob);
+            const link = document.createElement('a');
+            link.href = urlObject;
+            link.download = "babalaclip.mp4";
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(urlObject)
+        } catch(error)  {
+            console.error('Error:', error);
+            alert("Bir hata oluştu. Lütfen tekrar deneyin.");
+        };
     };
 
     return (
