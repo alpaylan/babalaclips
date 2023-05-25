@@ -41,7 +41,7 @@ const SubtitleTable = ({ subtitles, filter, currentTimestamp, setPlayerTime }: S
                             backgroundColor: getBackGroundColor(subtitle.startTime, subtitle.endTime, currentTimestamp),
                             cursor: "pointer",
                             "&:hover": {
-                                backgroundColor: "lightgray",
+                                backgroundColor: {xs: 'none', sm: 'lightgray'}
                             }
                         }}
                         onClick={() => setPlayerTime(subtitle.startTime)}
