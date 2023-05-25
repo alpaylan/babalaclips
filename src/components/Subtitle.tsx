@@ -77,7 +77,8 @@ const Subtitle = ({ setPlayerTime, currentTimestamp, data }: SubtitleProps) => {
                                 top: '50%',
                                 left: '50%',
                                 transform: 'translate(-50%, -50%)',
-                                width: 400,
+                                width: 1000,
+                                height: 600,
                                 bgcolor: 'background.paper',
                                 border: '2px solid #000',
                                 boxShadow: 24,
@@ -91,10 +92,15 @@ const Subtitle = ({ setPlayerTime, currentTimestamp, data }: SubtitleProps) => {
                                     value={searchInput}
                                     onChange={(e) => setSearchInput(e.target.value)}
                                 />
-                                <SubtitleTable
-                                    setPlayerTime={setPlayerTime}
-                                    subtitles={subtitles}
-                                    filter={searchFilter(searchInput)} />
+                                <div style={{
+                                    width: 900,
+                                    height: 500,
+                                    overflow: "scroll"
+                                }}>
+                                    <SubtitleTable
+                                        setPlayerTime={setPlayerTime}
+                                        filter={searchFilter(searchInput)} />
+                                </div>
                             </Box>
 
                         </Modal>
