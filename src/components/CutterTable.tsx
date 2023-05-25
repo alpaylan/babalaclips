@@ -95,7 +95,7 @@ const CutterTable = ({ interval }: { interval: [number, number] }) => {
             end: interval[1]
         };
 
-        fetch('http://127.0.0.1:5000/cut', {
+        fetch('https://babalaclips.fly.dev/cut', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -103,19 +103,26 @@ const CutterTable = ({ interval }: { interval: [number, number] }) => {
             body: JSON.stringify(data),
             mode: 'cors'
         })
-            .then(response => response.blob())
-            .then(blob => {
-                const urlObject = URL.createObjectURL(blob);
-                const link = document.createElement('a');
-                link.href = urlObject;
-                link.download = "babalaclip.mp4";
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
-            }
-            )
-            .catch((error) => {
-                console.error('Error:', error);
+            .then(response => response.text())
+            .then(url => {
+                fetch(url, {
+                    method: 'GET',
+                    mode: 'cors'
+                })
+                    .then(response => response.blob())
+                    .then(blob => {
+                        console.log(blob);
+                        const urlObject = URL.createObjectURL(blob);
+                        const link = document.createElement('a');
+                        link.href = urlObject;
+                        link.download = "babalaclip.mp4";
+                        document.body.appendChild(link);
+                        link.click();
+                        document.body.removeChild(link);
+                    })
+                    .catch((error) => {
+                        console.error('Error:', error);
+                    });
             }
             );
     };
