@@ -3,6 +3,12 @@ import { useState } from "react";
 import { SubtitleData } from "./Subtitle";
 import CutterTable from "./CutterTable";
 import subtitles from "@/data/subtitles.json";
+import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
+import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
+import VerticalAlignBottomIcon from '@mui/icons-material/VerticalAlignBottom';
+import VerticalAlignTopIcon from '@mui/icons-material/VerticalAlignTop';
+import KeyboardCapslockIcon from '@mui/icons-material/KeyboardCapslock';
+import CloseIcon from '@mui/icons-material/Close';
 
 type CutterProps = {
     open: boolean,
@@ -80,16 +86,15 @@ const Cutter = ({ open, handleClose, initialSubtitleId }: CutterProps) => {
             <Grid container spacing={2}>
                 <Grid item xs={12} sm={4} md={4}>
                     <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
-                        <Paper sx={{ p: 2, width: 250, height: 400 }}>
+                        <Paper sx={{ p: 2, width: 250, height: 450 }}>
                             <Stack spacing={2} direction="column">
-                                <Button variant="outlined" onClick={handleWindowSlideDown}>Aşağıya Kaydır</Button>
-                                <Button variant="outlined" onClick={handleWindowSlideUp}>Yukarıya Kaydır</Button>
-                                <Button variant="outlined" onClick={handleWindowExtendDown}>Aşağıya Uzat</Button>
-                                <Button variant="outlined" onClick={handleWindowExtendUp}>Yukarıya Uzat</Button>
-                                <Button variant="outlined" onClick={handleWindowShortenDown}>Aşağıdan Kısalt</Button>
-                                <Button variant="outlined" onClick={handleWindowShortenUp}>Yukarıdan Kısalt</Button>
-                                <Button variant="outlined" onClick={handleClose}>Kaydet</Button>
-                                <Button variant="outlined" onClick={handleClose}>Kapat</Button>
+                                <Button variant="outlined" style={{justifyContent: "left"}} startIcon={<ArrowDownwardIcon />} onClick={handleWindowSlideDown}>Aşağıya Kaydır</Button>
+                                <Button variant="outlined" style={{justifyContent: "left"}} startIcon={<ArrowUpwardIcon />} onClick={handleWindowSlideUp}>Yukarıya Kaydır</Button>
+                                <Button variant="outlined" style={{justifyContent: "left"}} startIcon={<VerticalAlignBottomIcon />} onClick={handleWindowExtendDown}>Aşağıya Uzat</Button>
+                                <Button variant="outlined" style={{justifyContent: "left"}} startIcon={<VerticalAlignTopIcon />} onClick={handleWindowExtendUp}>Yukarıya Uzat</Button>
+                                <Button variant="outlined" style={{justifyContent: "left"}} startIcon={<KeyboardCapslockIcon />} onClick={handleWindowShortenDown}>Aşağıdan Kısalt</Button>
+                                <Button variant="outlined" style={{justifyContent: "left"}} startIcon={<KeyboardCapslockIcon style={{ transform: "rotate(180deg)" }} />} onClick={handleWindowShortenUp}>Yukarıdan Kısalt</Button>
+                                <Button variant="outlined" style={{justifyContent: "left"}} startIcon={<CloseIcon />} onClick={handleClose}>Kapat</Button>
                             </Stack>
                         </Paper>
                     </Box>

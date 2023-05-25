@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 
 import Grid from '@mui/material/Grid';
-import { Button, Modal, Slider, Stack, Typography } from "@mui/material";
+import { Button, Slider, Stack, Typography } from "@mui/material";
 
 import Subtitle, { SubtitleData } from "@/components/Subtitle";
 import YouTubeVideo from "@/components/YoutubeVideo";

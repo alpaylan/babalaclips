@@ -14,6 +14,7 @@ import { SubtitleData } from './Subtitle';
 import subtitles from '@/data/subtitles.json';
 import { Button, Stack, TextField, Typography } from '@mui/material';
 import { useRef } from 'react';
+import SaveIcon from '@mui/icons-material/Save';
 
 const columns = [
     {
@@ -87,6 +88,38 @@ const rowContent = (startId: number, endId: number) => (_index: number, row: Sub
 
 const CutterTable = ({ interval }: { interval: [number, number] }) => {
     const virtuoso = useRef<TableVirtuosoHandle>(null);
+
+    const handleSave = () => {
+        const data = {
+            start: interval[0],
+            end: interval[1]
+        };
+
+        fetch('http://127.0.0.1:5000/cut', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data),
+            mode: 'cors'
+        })
+            .then(response => response.blob())
+            .then(blob => {
+                const urlObject = URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                link.href = urlObject;
+                link.download = "babalaclip.mp4";
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            }
+            )
+            .catch((error) => {
+                console.error('Error:', error);
+            }
+            );
+    };
+
     return (
         <Paper style={{ height: 400, width: '100%' }}>
             <TableVirtuoso
@@ -104,7 +137,14 @@ const CutterTable = ({ interval }: { interval: [number, number] }) => {
                 Aralık: {secondsToTime(subtitles[interval[0]].startTime)} - {secondsToTime(subtitles[interval[1]].endTime)}
             </Typography>
             <Button
-                variant="contained"
+                variant="outlined"
+                disabled={subtitles[interval[1]].endTime - subtitles[interval[0]].startTime > 180}
+                style={{ justifyContent: "left" }} startIcon={<SaveIcon />}
+                onClick={handleSave}>
+                Kaydet
+            </Button>
+            <Button
+                variant="outlined"
                 color="primary"
                 onClick={() => {
                     virtuoso.current?.scrollToIndex({ index: interval[0], align: 'start' });
