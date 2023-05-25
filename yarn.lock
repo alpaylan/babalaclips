@@ -2514,6 +2514,11 @@ react-transition-group@^4.4.5:
     loose-envify "^1.4.0"
     prop-types "^15.6.2"
 
+react-virtuoso@^4.3.8:
+  version "4.3.8"
+  resolved "https://registry.yarnpkg.com/react-virtuoso/-/react-virtuoso-4.3.8.tgz#eeeb4112d8477b02bec56d55c8030073302ad465"
+  integrity sha512-hoZj8Dl1R9fYqtUwA5LjCii1djO4ZNtoYkYsR52ZjdJzdXh2hec1IQ2O+1MZNjLTb4v8ff3hbt34StiHTVDdlg==
+
 react-youtube@^10.1.0:
   version "10.1.0"
   resolved "https://registry.yarnpkg.com/react-youtube/-/react-youtube-10.1.0.tgz#7e5670c764f12eb408166e8eb438d788dc64e8b5"

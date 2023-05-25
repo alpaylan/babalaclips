@@ -1,7 +1,7 @@
-import React, { useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 
 import Grid from '@mui/material/Grid';
-import { Button, Modal, Stack, Typography } from "@mui/material";
+import { Button, Modal, Slider, Stack, Typography } from "@mui/material";
 
 import Subtitle, { SubtitleData } from "@/components/Subtitle";
 import YouTubeVideo from "@/components/YoutubeVideo";
@@ -13,10 +13,20 @@ import Cutter from '@/components/Cutter';
 
 const data = require('@/data/subtitles.json');
 
+
+const secondsToTime = (seconds: number) => {
+  const date = new Date(0);
+  date.setSeconds(seconds);
+  return date.toISOString().substr(11, 8);
+}
+
+
 export default function Home() {
   const [player, setPlayer] = useState<Player | null>(null);
   const [timestamp, setTimestamp] = React.useState(0);
   const [cutterOpen, setCutterOpen] = React.useState(false);
+  const [sliding, setSliding] = React.useState(false);
+  const [sliderValue, setSliderValue] = React.useState(0);
 
   const handleCutterClose = () => {
     setCutterOpen(false);
@@ -25,10 +35,6 @@ export default function Home() {
   const handleCutterOpen = () => {
     setCutterOpen(true);
   };
-
-
-
-  console.log("data", data);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -43,27 +49,42 @@ export default function Home() {
 
   return (
     <Grid container spacing={2}>
-      <Grid item xs={12} md={6}>
+      <Grid item xs={12} md={4}>
         <Stack spacing={2}>
           <Typography variant="h4" component="h1" gutterBottom>
             Welcome to Babala Clips!
           </Typography>
           <YouTubeVideo onReady={setPlayer} />
-          <p>Current Time: {timestamp.toFixed(2)} seconds</p>
+          <Slider
+            value={sliding ? sliderValue : timestamp}
+            onChange={(e, value) => {
+              setSliding(true);
+              setSliderValue(value as number)
+            }}
+            onChangeCommitted={(e, value) => {
+              setSliding(false);
+              setPlayerTime(value as number);
+            }}
+            min={0}
+            max={player?.getDuration() || 0}
+            step={1}
+            valueLabelDisplay="auto"
+            valueLabelFormat={secondsToTime}
+
+          />
           <Button variant="outlined" onClick={handleCutterOpen}>Videoyu Kes</Button>
         </Stack>
       </Grid>
-      <Grid item xs={12} md={6}>
-        <Subtitle setPlayerTime={setPlayerTime} currentTimestamp={timestamp} data={data} />
+      <Grid item xs={12} md={8}>
+        <Subtitle setPlayerTime={setPlayerTime} currentTimestamp={
+          sliding ? sliderValue : timestamp
+          } data={data} />
       </Grid>
-      <Modal 
+      <Cutter
         open={cutterOpen}
-        onClose={handleCutterClose}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
-        <Cutter />
-      </Modal>
+        handleClose={handleCutterClose}
+        initialSubtitleId={0}
+      />
     </Grid>
   );
 }

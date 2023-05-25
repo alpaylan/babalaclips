@@ -57,12 +57,13 @@ const Subtitle = ({ setPlayerTime, currentTimestamp, data }: SubtitleProps) => {
                     onChange={(e) => setSearchInput(e.target.value)}
                 />
             }
-            <SubtitleTable 
-                setPlayerTime={setPlayerTime} 
-                subtitles={subtitles}
-                currentTimestamp={currentTimestamp}
-                filter={timestampFilter(currentTimestamp)}
+            <div style={{ width: "100%", height: "500px", overflow: "scroll" }}>
+                <SubtitleTable
+                    setPlayerTime={setPlayerTime}
+                    currentTimestamp={currentTimestamp}
+                    filter={timestampFilter(currentTimestamp)}
                 />
+            </div>
             {
                 searchInput === "" ? null : (
                     <div>
@@ -90,9 +91,9 @@ const Subtitle = ({ setPlayerTime, currentTimestamp, data }: SubtitleProps) => {
                                     value={searchInput}
                                     onChange={(e) => setSearchInput(e.target.value)}
                                 />
-                                <SubtitleTable 
-                                    setPlayerTime={setPlayerTime} 
-                                    subtitles={subtitles} 
+                                <SubtitleTable
+                                    setPlayerTime={setPlayerTime}
+                                    subtitles={subtitles}
                                     filter={searchFilter(searchInput)} />
                             </Box>
 

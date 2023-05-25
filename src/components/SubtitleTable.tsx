@@ -1,25 +1,30 @@
 
 import { Table, TableBody, TableCell, TableHead, TableRow} from '@mui/material';
 import { SubtitleData } from "@/components/Subtitle";
+import subtitles from "@/data/subtitles.json";
 
 export type SubtitleTableProps = {
-    subtitles: SubtitleData[],
     filter: (subtitles: SubtitleData[]) => SubtitleData[],
     setPlayerTime: (time: number) => void,
     currentTimestamp?: number,
 };
 
+const secondsToTime = (seconds: number) => {
+    const date = new Date(0);
+    date.setSeconds(seconds);
+    return date.toISOString().substr(11, 8);
+}
 
-const SubtitleTable = ({ subtitles, filter, currentTimestamp, setPlayerTime }: SubtitleTableProps) => {
+
+const SubtitleTable = ({ filter, currentTimestamp, setPlayerTime }: SubtitleTableProps) => {
     const subtitlesToDisplay = filter(subtitles);
 
     return (
         <Table>
             <TableHead>
                 <TableRow>
-                    <TableCell>Start Time</TableCell>
-                    <TableCell>End Time</TableCell>
-                    <TableCell>Text</TableCell>
+                    <TableCell>Süre</TableCell>
+                    <TableCell>Metin</TableCell>
                 </TableRow>
             </TableHead>
             <TableBody>
@@ -27,16 +32,14 @@ const SubtitleTable = ({ subtitles, filter, currentTimestamp, setPlayerTime }: S
                     if (currentTimestamp && currentTimestamp >= subtitle.startTime && currentTimestamp < subtitle.endTime) {
                         return (
                             <TableRow key={index} style={{ backgroundColor: "yellow" }}>
-                                <TableCell>{subtitle.startTime}</TableCell>
-                                <TableCell>{subtitle.endTime}</TableCell>
+                                <TableCell>{secondsToTime(subtitle.startTime)} - {secondsToTime(subtitle.endTime)}</TableCell>
                                 <TableCell>{subtitle.text}</TableCell>
                             </TableRow>
                         );
                     }
                     return (
                         <TableRow key={index} onClick={() => setPlayerTime(subtitle.startTime)}>
-                            <TableCell>{subtitle.startTime}</TableCell>
-                            <TableCell>{subtitle.endTime}</TableCell>
+                            <TableCell>{secondsToTime(subtitle.startTime)} - {secondsToTime(subtitle.endTime)}</TableCell>
                             <TableCell>{subtitle.text}</TableCell>
                         </TableRow>
                     );
