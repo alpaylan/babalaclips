@@ -12,7 +12,7 @@ import { TableVirtuoso, TableComponents, TableVirtuosoHandle } from 'react-virtu
 import { SubtitleData } from './Subtitle';
 
 import subtitles from '@/data/subtitles.json';
-import { Button, Stack, TextField, Typography } from '@mui/material';
+import { Button, Typography } from '@mui/material';
 import { useRef } from 'react';
 import SaveIcon from '@mui/icons-material/Save';
 
