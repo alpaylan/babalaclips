@@ -16,12 +16,6 @@ type CutterProps = {
     initialSubtitleId: number,
 };
 
-const secondsToTime = (seconds: number) => {
-    const date = new Date(0);
-    date.setSeconds(seconds);
-    return date.toISOString().substr(11, 8);
-}
-
 const Cutter = ({ open, handleClose, initialSubtitleId }: CutterProps) => {
     const [firstSubtitleId, setFirstSubtitleId] = useState<number>(initialSubtitleId);
     const [lastSubtitleId, setLastSubtitleId] = useState<number>(initialSubtitleId);
