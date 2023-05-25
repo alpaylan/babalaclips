@@ -29,6 +29,7 @@ const columns = [
 ];
 
 const VirtuosoTableComponents: TableComponents<SubtitleData> = {
+    // eslint-disable-next-line react/display-name
     Scroller: React.forwardRef<HTMLDivElement>((props, ref) => (
         <TableContainer component={Paper} {...props} ref={ref} />
     )),
@@ -37,6 +38,7 @@ const VirtuosoTableComponents: TableComponents<SubtitleData> = {
     ),
     TableHead,
     TableRow: ({ item: _item, ...props }) => <TableRow {...props} />,
+    // eslint-disable-next-line react/display-name
     TableBody: React.forwardRef<HTMLTableSectionElement>((props, ref) => (
         <TableBody {...props} ref={ref} />
     )),
@@ -67,11 +69,14 @@ const secondsToTime = (seconds: number) => {
     return date.toISOString().substr(11, 8);
 }
 
+// eslint-disable-next-line react/display-name
 const rowContent = (startId: number, endId: number) => (_index: number, row: SubtitleData) => {
     let style = undefined;
+
     if (_index >= startId && _index <= endId) {
         style = { backgroundColor: "yellow" };
     }
+
     return (
         <>
             <TableCell style={style}>{secondsToTime(row.startTime)} - {secondsToTime(row.endTime)}</TableCell>
@@ -102,7 +107,7 @@ const CutterTable = ({ interval }: { interval: [number, number] }) => {
                 variant="contained"
                 color="primary"
                 onClick={() => {
-                    virtuoso.current?.scrollToIndex({index: interval[0],  align: 'start' });
+                    virtuoso.current?.scrollToIndex({ index: interval[0], align: 'start' });
                 }}
             >  Aralığa Git</Button>
         </Paper>
