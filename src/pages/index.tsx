@@ -50,7 +50,7 @@ export default function Home() {
           </Typography>
           <YouTubeVideo onReady={setPlayer} />
           <p>Current Time: {timestamp.toFixed(2)} seconds</p>
-          <Button variant="outlined" onClick={handleCutterOpen}>Videoyu Kes</Button>
+          <Button variant="outlined" onClick={handleCutterOpen} sx={{ width: '25%' }}>Videoyu Kes</Button>
         </Stack>
       </Grid>
       <Grid item xs={12} md={6}>

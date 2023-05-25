@@ -1,5 +1,5 @@
 
-import { Table, TableBody, TableCell, TableHead, TableRow} from '@mui/material';
+import { Table, TableBody, TableCell, TableHead, TableRow } from '@mui/material';
 import { SubtitleData } from "@/components/Subtitle";
 
 export type SubtitleTableProps = {
@@ -8,6 +8,17 @@ export type SubtitleTableProps = {
     setPlayerTime: (time: number) => void,
     currentTimestamp?: number,
 };
+
+const formatTime = (time: number) => {
+    return new Date(time * 1000).toISOString().slice(11, 19);
+}
+
+const getBackGroundColor = (startTime: number, endTime: number, currentTimestamp?: number) => {
+    if (currentTimestamp && currentTimestamp >= startTime && currentTimestamp < endTime) {
+        return "yellow";
+    }
+    return "white";
+}
 
 
 const SubtitleTable = ({ subtitles, filter, currentTimestamp, setPlayerTime }: SubtitleTableProps) => {
@@ -23,24 +34,25 @@ const SubtitleTable = ({ subtitles, filter, currentTimestamp, setPlayerTime }: S
                 </TableRow>
             </TableHead>
             <TableBody>
-                {subtitlesToDisplay.map((subtitle, index) => {
-                    if (currentTimestamp && currentTimestamp >= subtitle.startTime && currentTimestamp < subtitle.endTime) {
-                        return (
-                            <TableRow key={index} style={{ backgroundColor: "yellow" }}>
-                                <TableCell>{subtitle.startTime}</TableCell>
-                                <TableCell>{subtitle.endTime}</TableCell>
-                                <TableCell>{subtitle.text}</TableCell>
-                            </TableRow>
-                        );
-                    }
-                    return (
-                        <TableRow key={index} onClick={() => setPlayerTime(subtitle.startTime)}>
-                            <TableCell>{subtitle.startTime}</TableCell>
-                            <TableCell>{subtitle.endTime}</TableCell>
-                            <TableCell>{subtitle.text}</TableCell>
-                        </TableRow>
-                    );
-                })}
+                {subtitlesToDisplay.map((subtitle, index) => (
+                    <TableRow
+                        key={index}
+                        sx={{
+                            backgroundColor: getBackGroundColor(subtitle.startTime, subtitle.endTime, currentTimestamp),
+                            cursor: "pointer",
+                            "&:hover": {
+                                backgroundColor: "lightgray",
+                            }
+                        }}
+                        onClick={() => setPlayerTime(subtitle.startTime)}
+                    >
+                        <TableCell component="th" scope="row">
+                            {formatTime(subtitle.startTime)}
+                        </TableCell>
+                        <TableCell>{formatTime(subtitle.endTime)}</TableCell>
+                        <TableCell>{subtitle.text}</TableCell>
+                    </TableRow>
+                ))}
             </TableBody>
         </Table>
     );
